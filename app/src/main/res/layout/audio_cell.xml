@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/black"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/audio_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rua Paraíba, 1041"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/audio_hour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2:32 PM"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <Button
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="160dp"
+            android:background="@drawable/baseline_more_horiz_24" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:gravity="center">
+
+        <SeekBar
+            android:id="@+id/audio_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progressBackgroundTint="@color/white"
+            android:thumbTint="@color/white" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp">
+
+        <Button
+
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/baseline_settings_24" />
+
+
+        <Button
+            android:id="@+id/audio_backward"
+            android:layout_marginStart="120dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/fiftybackward"
+            android:backgroundTint="@color/blue"/>
+
+        <Button
+            android:id="@+id/audio_play"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/baseline_play_arrow_24" />
+
+        <Button
+            android:id="@+id/audio_forward"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/forward"
+            android:backgroundTint="@color/blue"/>
+
+        <Button
+            android:id="@+id/audio_delete"
+            android:layout_marginStart="120dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/baseline_restore_from_trash_24" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
