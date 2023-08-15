@@ -1,6 +1,7 @@
 package com.example.audiorecorder
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.media.MediaRecorder
 import android.os.Bundle
@@ -14,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.audiorecorder.Adapters.AudioListAdapter
 import com.example.audiorecorder.databinding.ActivityMainBinding
 import com.example.audiorecorder.models.Audio
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
@@ -28,10 +31,13 @@ class MainActivity : AppCompatActivity() {
 
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        loadData()
 
         recyclerView = binding.recyclerView
         adapter = AudioListAdapter(this, audioList)
@@ -43,6 +49,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun loadData() {
+        val sharedpreferences = getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
+        val savedListJson = sharedpreferences.getString("Audio_List",null)
+        val gson = Gson()
+        val listType = object : TypeToken<MutableList<Audio>>() {}.type
+
+        if (savedListJson != null) {
+            audioList = gson.fromJson(savedListJson, listType)
+        }
+
+
+
+
+    }
+
+    private fun saveData(string : String) {
+            val sharedpreferences = getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
+            val editor = sharedpreferences.edit()
+            editor.apply {
+                putString("Audio_List", string)
+            }.apply()
+     }
+
     private fun checkingMicrophonePermission() {
         if(mediaRecorder == null) {
             requestMicrophonePermission()
@@ -51,7 +80,6 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
-
     private fun startRecording() {
         val path = getFilePath()
         currentMillis = path
@@ -69,6 +97,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun stopRecording() {
+        val gson = Gson()
+
         mediaRecorder?.apply {
             stop()
             reset()
@@ -78,17 +108,16 @@ class MainActivity : AppCompatActivity() {
         mediaRecorder = null
         binding.recorderButton.text = "Rec"
         binding.recorderButton.background = ContextCompat.getDrawable(this@MainActivity, R.drawable.shape_circle)
-
-
         val audioFilePath = currentMillis
 
-        val createdFile = File(audioFilePath)
-        println("File exists: ${createdFile.exists()}")
         if (File(audioFilePath).exists()) {
             val audio = Audio("Audio ${i}", audioFilePath)
             audioList.add(audio)
             i++
             adapter.notifyDataSetChanged()
+            val json = gson.toJson(audioList)
+            saveData(json)
+
         } else {
             println("Doesnt found archive: $audioFilePath")
         }
