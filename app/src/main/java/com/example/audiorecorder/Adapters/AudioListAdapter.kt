@@ -13,6 +13,7 @@ import com.example.audiorecorder.MainActivity
 import com.example.audiorecorder.R
 import com.example.audiorecorder.databinding.AudioCellBinding
 import com.example.audiorecorder.models.Audio
+import com.google.gson.Gson
 import java.io.File
 import java.io.IOException
 
@@ -35,7 +36,7 @@ class AudioListAdapter(private val context : Context, private val audioList: Mut
 
 
     inner class AudioHolder(private val binding : AudioCellBinding) : RecyclerView.ViewHolder(binding.root)  {
-
+        val gson = Gson()
         private var title = binding.audioTitle
         private val playButton = binding.audioPlay
         private var mediaPlayer : MediaPlayer? = null
@@ -55,11 +56,11 @@ class AudioListAdapter(private val context : Context, private val audioList: Mut
             }
             deleteButton.setOnClickListener {
                 val file = File(audio.filePath)
-
                if (file.delete()) {
                    audioList.remove(audio)
+                   val json = gson.toJson(audioList)
+                   saveData(json)
                    notifyDataSetChanged()
-                   println("Arquivo deletado com sucesso")
                } else {
                    Toast.makeText(context,"Ocorreu um erro!", Toast.LENGTH_SHORT).show()
                }
@@ -75,6 +76,14 @@ class AudioListAdapter(private val context : Context, private val audioList: Mut
                     stopPlaying()
                     playButton.background = ContextCompat.getDrawable(context, R.drawable.baseline_play_arrow_24 )
                 }
+        }
+
+        private fun saveData(string: String) {
+            val sharedpreferences = context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
+            val editor = sharedpreferences.edit()
+            editor.apply {
+                putString("Audio_List", string)
+            }.apply()
         }
 
         private fun stopPlaying() {
