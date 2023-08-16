@@ -3,6 +3,7 @@ package com.example.audiorecorder.Adapters
 import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.os.Handler
 import android.provider.MediaStore.Audio.Media
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -41,6 +42,7 @@ class AudioListAdapter(private val context : Context, private val audioList: Mut
         private val playButton = binding.audioPlay
         private var mediaPlayer : MediaPlayer? = null
         private val deleteButton = binding.audioDelete
+        private val seekBar = binding.audioBar
 
         fun bind(audio : Audio) {
             title.text = audio.title
@@ -72,11 +74,25 @@ class AudioListAdapter(private val context : Context, private val audioList: Mut
                 mediaPlayer?.setAudioAttributes(AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA).setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build())
                 mediaPlayer?.prepare()
                 mediaPlayer?.start()
+
+            val duration = mediaPlayer?.duration ?: 0
+            val handler = Handler()
+            handler.postDelayed(object : Runnable {
+                override fun run() {
+                    val currentPosition = mediaPlayer?.currentPosition ?: 0
+                    updateSeekBar(currentPosition, duration)
+                    if (mediaPlayer?.isPlaying == true) {
+                        handler.postDelayed(this, 0)
+                    }
+                }
+            }, 0)
                 mediaPlayer?.setOnCompletionListener {
                     stopPlaying()
                     playButton.background = ContextCompat.getDrawable(context, R.drawable.baseline_play_arrow_24 )
                 }
         }
+
+
 
         private fun saveData(string: String) {
             val sharedpreferences = context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
@@ -84,6 +100,11 @@ class AudioListAdapter(private val context : Context, private val audioList: Mut
             editor.apply {
                 putString("Audio_List", string)
             }.apply()
+        }
+
+        private fun updateSeekBar(currentPosition: Int, duration: Int) {
+            val progress = (currentPosition.toFloat() / duration.toFloat() * 100).toInt()
+            binding.audioBar.progress = progress
         }
 
         private fun stopPlaying() {
