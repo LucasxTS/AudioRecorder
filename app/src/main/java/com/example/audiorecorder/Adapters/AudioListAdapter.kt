@@ -4,19 +4,16 @@ import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.Handler
-import android.provider.MediaStore.Audio.Media
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.audiorecorder.MainActivity
 import com.example.audiorecorder.R
 import com.example.audiorecorder.databinding.AudioCellBinding
 import com.example.audiorecorder.models.Audio
 import com.google.gson.Gson
 import java.io.File
-import java.io.IOException
 
 class AudioListAdapter(private val context : Context, private val audioList: MutableList<Audio>) : RecyclerView.Adapter<AudioListAdapter.AudioHolder>() {
 
@@ -43,9 +40,11 @@ class AudioListAdapter(private val context : Context, private val audioList: Mut
         private var mediaPlayer : MediaPlayer? = null
         private val deleteButton = binding.audioDelete
         private val seekBar = binding.audioBar
+        private val audioHour = binding.audioHour
 
         fun bind(audio : Audio) {
             title.text = audio.title
+            audioHour.text = audio.hour
 
             playButton.setOnClickListener {
                 if (mediaPlayer == null) {
@@ -56,6 +55,8 @@ class AudioListAdapter(private val context : Context, private val audioList: Mut
                     playButton.background = ContextCompat.getDrawable(context, R.drawable.baseline_play_arrow_24 )
                 }
             }
+
+
             deleteButton.setOnClickListener {
                 val file = File(audio.filePath)
                if (file.delete()) {
@@ -91,8 +92,6 @@ class AudioListAdapter(private val context : Context, private val audioList: Mut
                     playButton.background = ContextCompat.getDrawable(context, R.drawable.baseline_play_arrow_24 )
                 }
         }
-
-
 
         private fun saveData(string: String) {
             val sharedpreferences = context.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
