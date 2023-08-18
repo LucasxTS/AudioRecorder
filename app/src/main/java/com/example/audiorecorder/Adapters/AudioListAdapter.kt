@@ -5,7 +5,10 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.Handler
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -34,8 +37,9 @@ class AudioListAdapter(private val context : Context, private val audioList: Mut
 
 
     inner class AudioHolder(private val binding : AudioCellBinding) : RecyclerView.ViewHolder(binding.root)  {
-        val gson = Gson()
+        private val gson = Gson()
         private var title = binding.audioTitle
+        private val editTitle = binding.audioTitleEdit
         private val playButton = binding.audioPlay
         private var mediaPlayer : MediaPlayer? = null
         private val deleteButton = binding.audioDelete
@@ -43,6 +47,7 @@ class AudioListAdapter(private val context : Context, private val audioList: Mut
         private val audioHour = binding.audioHour
 
         fun bind(audio : Audio) {
+            editTitle.setText(audio.title)
             title.text = audio.title
             audioHour.text = audio.hour
 
@@ -56,6 +61,21 @@ class AudioListAdapter(private val context : Context, private val audioList: Mut
                 }
             }
 
+            title.setOnClickListener {
+                changingText(true)
+            }
+
+            binding.audioTitleEdit.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    saveTitleEdit(audio)
+                    changingText(false)
+                    hideKeyboard()
+                    true
+
+                } else {
+                    false
+                }
+            }
 
             deleteButton.setOnClickListener {
                 val file = File(audio.filePath)
@@ -69,6 +89,31 @@ class AudioListAdapter(private val context : Context, private val audioList: Mut
                }
             }
         }
+
+        private fun hideKeyboard() {
+            val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(binding.audioTitleEdit.windowToken, 0)
+        }
+
+        private fun saveTitleEdit(audio : Audio) {
+        val newText = editTitle.text.toString()
+            title.text = newText
+            audio.title = newText
+            val json = gson.toJson(audioList)
+            saveData(json)
+        }
+
+        private fun changingText(isEdited : Boolean) {
+            if (isEdited) {
+                title.visibility = View.GONE
+                editTitle.visibility = View.VISIBLE
+                editTitle.requestFocus()
+            } else {
+                title.visibility = View.VISIBLE
+                editTitle.visibility = View.GONE
+            }
+        }
+
         private fun startPlaying(filePath : String) {
                 mediaPlayer = MediaPlayer()
                 mediaPlayer?.setDataSource(filePath)

@@ -1,7 +1,7 @@
 package com.example.audiorecorder.models
 
 data class Audio(
-    val title : String,
+    var title : String,
     val filePath : String,
     val hour : String
 )

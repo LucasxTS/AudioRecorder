@@ -150,10 +150,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun requestMicrophoneAndLocationPermission() {
         val audioPermission = Manifest.permission.RECORD_AUDIO
-        val locationPermission = Manifest.permission.ACCESS_FINE_LOCATION
 
-        val hasMicrophonePermission = ContextCompat.checkSelfPermission(this, audioPermission) == PackageManager.PERMISSION_GRANTED
-        val hasLocationPermission = ContextCompat.checkSelfPermission(this, locationPermission) == PackageManager.PERMISSION_GRANTED
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, audioPermission)) {
             AlertDialog.Builder(this)
