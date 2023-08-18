@@ -49,11 +49,10 @@
 
         </LinearLayout>
 
-        <Button
+        <View
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_marginStart="160dp"
-            android:background="@drawable/baseline_more_horiz_24" />
+            android:layout_marginStart="160dp"/>
 
     </LinearLayout>
 
@@ -82,11 +81,9 @@
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp">
 
-        <Button
-
+        <View
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:background="@drawable/baseline_settings_24" />
 
 
         <Button

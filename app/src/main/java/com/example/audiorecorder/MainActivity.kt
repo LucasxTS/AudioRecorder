@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.media.MediaRecorder
 import android.os.Bundle
 import android.os.Environment
-import java.time.format.DateTimeFormatter
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -20,6 +19,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.File
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity() {
     var i = 1
@@ -31,14 +31,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapter: AudioListAdapter
     private var currentMillis: String = ""
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         loadData()
-
         recyclerView = binding.recyclerView
         adapter = AudioListAdapter(this, audioList)
         recyclerView.layoutManager = LinearLayoutManager(this)
